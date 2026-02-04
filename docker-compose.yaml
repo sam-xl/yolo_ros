@@ -1,0 +1,30 @@
+services:
+  yolo_ros: 
+    build: .
+    platform: linux/arm64
+    image: yolo_ros:latest # Image use order: Use local image > Pull from registry > Build and tag new image
+    container_name: yolo_ros
+    network_mode: host
+    ipc: host
+    volumes:
+      - $HOME/.Xauthority:/home/ros/.Xauthority # for displaying GUI elements
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+      - ROS_LOCALHOST_ONLY=${ROS_LOCALHOST_ONLY}
+      - RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}
+      - DISPLAY=${DISPLAY}
+    #Expose NVIDIA GPU to container applications using custom nvidia container runtime
+    runtime: nvidia 
+    # deploying nvidia gpus
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, compute, utility]
+    privileged: true
+    working_dir: /home/ros/ros2_ws
+    command: > 
+      bash -c "source install/setup.bash
+      && ros2 launch yolo_bringup ${YOLO_LAUNCH_FILE} input_image_topic:=${YOLO_INPUT_TOPIC}"
