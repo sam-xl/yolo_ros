@@ -544,9 +544,10 @@ class Detect3DNode(LifecycleNode):
             cv2.fillPoly(mask, [np.array(mask_array, dtype=np.int32)], 255)
             roi = cv2.bitwise_and(depth_image, depth_image, mask=mask)
 
-            # Get pixel coordinates for spatial weighting
-            y_coords, x_coords = np.where(mask > 0)
-            pixel_coords = np.column_stack([x_coords, y_coords])
+            # Get pixel coordinates for spatial weighting (full image coordinates)
+            img_h, img_w = depth_image.shape[:2]
+            y_grid, x_grid = np.meshgrid(np.arange(img_h), np.arange(img_w), indexing="ij")
+            pixel_coords = np.column_stack([x_grid.flatten(), y_grid.flatten()])
 
         else:
             # Crop depth image by the 2D BB
