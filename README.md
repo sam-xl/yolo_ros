@@ -1,4 +1,4 @@
-# yolo_ros
+# yolo_ros(Jetson)
 
 ROS 2 wrap for YOLO models from [Ultralytics](https://github.com/ultralytics/ultralytics) to perform object detection and tracking, instance segmentation, human pose estimation and Oriented Bounding Box (OBB). There are also 3D versions of object detection, including instance segmentation, and human pose estimation based on depth images.
 
@@ -37,17 +37,13 @@ colcon build
 
 ## Docker
 
-Build the yolo_ros docker.
+Build and bring up the container with docker compose: 
 
 ```shell
-docker build -t yolo_ros .
+docker compose up 
 ```
 
-Run the docker container. If you want to use CUDA, you have to install the [NVIDIA Container Tollkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) and add `--gpus all`.
-
-```shell
-docker run -it --rm --gpus all yolo_ros
-```
+This will automatically run the yolo model which ihs specified. You can configure the specific model that runs and image topic that it runs inference on in the .env file or the compose file itself, and the options for models to run can be seen in the [launch folder](yolo_bringup/launch/). 
 
 ## Models
 
